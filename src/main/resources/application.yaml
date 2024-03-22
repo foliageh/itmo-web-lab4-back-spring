@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/studs
+    username: s367417
+    password: kcLgRKtukMauX1da
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        hbm2ddl:
+          auto: update
+    hibernate:
+      ddl-auto: create-drop  # update
+token:
+  signing:
+    key: 4E872F60D2DA827DDFB5CC4DC92C6DE66AAD47D871F61DD18BBF0965E6133376  # random SHA256 hash
+server:
+  error:
+    include-message: always
+  servlet:
+    context-path: /api
