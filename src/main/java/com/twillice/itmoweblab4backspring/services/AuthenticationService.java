@@ -7,6 +7,7 @@ import com.twillice.itmoweblab4backspring.security.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserService userService;
+    private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -34,7 +36,7 @@ public class AuthenticationService {
                 requestData.getUsername(),
                 requestData.getPassword()
         ));
-        var user = userService.userDetailsService().loadUserByUsername(requestData.getUsername());
+        var user = userDetailsService.loadUserByUsername(requestData.getUsername());
 
         var jwtToken = jwtService.generateToken(user);
         return new TokenResource(jwtToken);
