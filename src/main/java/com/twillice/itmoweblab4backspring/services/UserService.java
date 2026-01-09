@@ -19,8 +19,6 @@ public class UserService {
     }
 
     public User create(User user) {
-        if (repository.existsByUsername(user.getUsername()))
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this username already exists");
         return save(user);
     }
 

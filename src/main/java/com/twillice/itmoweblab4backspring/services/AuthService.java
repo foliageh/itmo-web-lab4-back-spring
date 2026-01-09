@@ -4,6 +4,7 @@ import com.twillice.itmoweblab4backspring.http.requests.UserAuthRequest;
 import com.twillice.itmoweblab4backspring.http.resources.TokenResource;
 import com.twillice.itmoweblab4backspring.model.User;
 import com.twillice.itmoweblab4backspring.security.JWTService;
+import com.twillice.itmoweblab4backspring.validators.UserAuthValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,14 +14,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthService {
     private final UserService userService;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserAuthValidator userAuthValidator;
 
     public TokenResource register(UserAuthRequest requestData) {
+        userAuthValidator.validateRegistration(requestData);
         var user = User.builder()
                 .username(requestData.getUsername())
                 .password(passwordEncoder.encode(requestData.getPassword()))
@@ -32,6 +35,7 @@ public class AuthenticationService {
     }
 
     public TokenResource login(UserAuthRequest requestData) {
+        userAuthValidator.validateLogin(requestData);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 requestData.getUsername(),
                 requestData.getPassword()

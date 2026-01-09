@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password: 
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:test-schema.sql
+
+token:
+  signing:
+    key: 4E872F60D2DA827DDFB5CC4DC92C6DE66AAD47D871F61DD18BBF0965E6133376
