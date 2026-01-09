@@ -5,7 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +16,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JWTService {
-    private static final int TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 1;
-
-    @Value("${token.signing.key}")
-    private String jwtSigningKey;
+    private final JwtConfig jwtConfig;
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -34,7 +32,7 @@ public class JWTService {
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY))
+                .expiration(new Date(System.currentTimeMillis() + JwtConfig.TOKEN_VALIDITY))
                 .signWith(getSigningKey()).compact();
     }
 
@@ -65,7 +63,7 @@ public class JWTService {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getJwtSigningKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
